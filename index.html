@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>悪いUI/UX教材 - 学校イベント参加申請フォーム</title>
+  <style>
+    /* 教材用に、あえて読みづらく整理されていない見た目にしています。 */
+    body {
+      margin: 0;
+      font-family: "Yu Mincho", "MS Mincho", "Times New Roman", serif;
+      background: #ffffff;
+      color: #2b2b2b;
+      font-size: 14px;
+      line-height: 1.05;
+      font-weight: 400;
+    }
+
+    /* 悪いUI/UX: 白っぽい背景に白っぽいカーソルを使い、現在位置を見失いやすくしています。 */
+    body,
+    button,
+    a,
+    input,
+    select,
+    textarea,
+    label {
+      cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cpath d='M4 2 L4 23 L10 17 L14 26 L18 24 L14 15 L22 15 Z' fill='%23ffffff' stroke='%23d9d9d9' stroke-width='1.4'/%3E%3Cpath d='M6 6 L6 18 L9 14 L11 19 L13 18 L11 13 L16 13 Z' fill='%23f7f7f7'/%3E%3C/svg%3E") 4 2, auto;
+    }
+
+    .warning {
+      background: #fffd77;
+      color: #a00000;
+      padding: 12px;
+      border-bottom: 4px double #d30000;
+      font-family: Arial, sans-serif;
+      font-weight: bold;
+      text-align: center;
+      letter-spacing: 0.04em;
+    }
+
+    .page {
+      width: 94%;
+      max-width: 1180px;
+      margin: 8px auto 30px;
+      background: #fffefe;
+      border: 3px dotted #777;
+      padding: 9px;
+    }
+
+    h1 {
+      font-family: "MS Gothic", "Courier New", monospace;
+      font-size: 20px;
+      margin: 3px 0 4px;
+      color: #273100;
+      text-decoration: underline;
+      font-weight: normal;
+    }
+
+    h2 {
+      font-family: "Yu Mincho", "MS Mincho", serif;
+      font-size: 15px;
+      margin: 8px 0 3px;
+      color: #273100;
+      font-weight: normal;
+    }
+
+    .portal-head {
+      display: grid;
+      grid-template-columns: 190px 1fr 180px;
+      gap: 5px;
+      align-items: stretch;
+      margin-bottom: 5px;
+      font-family: Arial, "Yu Gothic", sans-serif;
+    }
+
+    .portal-logo,
+    .portal-status,
+    .portal-help {
+      border: 2px solid #909090;
+      background: #fbfbfb;
+      padding: 5px;
+      min-height: 42px;
+    }
+
+    .portal-logo {
+      color: #005aa0;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .portal-logo small {
+      display: block;
+      color: #555;
+      font-size: 11px;
+      font-weight: normal;
+    }
+
+    .portal-status {
+      background: #ffffff;
+      font-size: 12px;
+    }
+
+    .portal-help {
+      background: #fdfdfd;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    /* 悪いUI/UX: タブが多く、現在位置や重要度がわかりにくいです。 */
+    .portal-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2px;
+      margin: 4px 0;
+      font-family: Arial, "Yu Gothic", sans-serif;
+    }
+
+    .portal-tabs button {
+      border: 1px solid #777;
+      background: linear-gradient(#ffffff, #f4f4f4);
+      color: #224;
+      padding: 3px 9px;
+      font-size: 12px;
+    }
+
+    .learning-layout {
+      display: grid;
+      grid-template-columns: 170px 1fr 210px;
+      gap: 6px;
+      align-items: start;
+    }
+
+    .side-menu,
+    .notice-box {
+      border: 2px solid #888;
+      background: #fbfbfb;
+      padding: 5px;
+      font-family: Arial, "Yu Gothic", sans-serif;
+      font-size: 12px;
+    }
+
+    .side-menu h2,
+    .notice-box h2 {
+      font-size: 14px;
+      margin: 0 0 4px;
+      color: #003f77;
+    }
+
+    .side-menu button,
+    .notice-box button {
+      width: 100%;
+      margin: 2px 0;
+      padding: 5px 3px;
+      border: 1px solid #777;
+      background: #fff;
+      color: #333;
+      font-size: 12px;
+      text-align: left;
+    }
+
+    .notice-box ul {
+      margin: 4px 0 5px;
+      padding-left: 17px;
+    }
+
+    .notice-box li {
+      margin-bottom: 4px;
+    }
+
+    .lesson-strip {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 3px;
+      margin: 5px 0;
+      font-family: Arial, "Yu Gothic", sans-serif;
+      font-size: 11px;
+    }
+
+    .lesson-strip span {
+      border: 1px solid #888;
+      background: #ffffff;
+      padding: 3px;
+      text-align: center;
+    }
+
+    .crowded {
+      columns: 2;
+      column-gap: 12px;
+      font-size: 12px;
+      background: #ffffff;
+      border: 1px solid #c2bd70;
+      padding: 6px;
+    }
+
+    .tiny-note,
+    .important,
+    .extra-note,
+    label,
+    .fake-link,
+    .real-button-looking-link {
+      font-size: 13px;
+      color: #333;
+      font-weight: normal;
+    }
+
+    /* 悪いUI/UX: フォントサイズや書体を混在させ、読む負担を増やしています。 */
+    label:nth-of-type(odd),
+    .tiny-note,
+    .extra-note {
+      font-family: "Courier New", "MS Gothic", monospace;
+      font-size: 11px;
+    }
+
+    /* 悪いUI/UX: 重要な情報と補足情報の見た目に差をつけていません。 */
+    .important {
+      display: inline;
+      background: transparent;
+    }
+
+    .form-area {
+      position: relative;
+      min-height: 610px;
+      border: 2px solid #a3a3a3;
+      padding: 8px;
+      background: repeating-linear-gradient(90deg, #ffffff, #ffffff 18px, #f4f4f4 18px, #f4f4f4 20px);
+    }
+
+    .field-cluster {
+      display: inline-block;
+      vertical-align: top;
+      width: 31%;
+      min-width: 210px;
+      margin: 4px 5px 8px 0;
+      padding: 4px;
+      border: 1px dashed #777;
+      background: rgba(255, 255, 255, 0.82);
+    }
+
+    label {
+      display: inline;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 92%;
+      box-sizing: border-box;
+      margin: 2px 0 4px;
+      border: 2px inset #989898;
+      background: #fff;
+      color: #222;
+      font-family: "MS Mincho", "Times New Roman", serif;
+      font-size: 12px;
+    }
+
+    textarea {
+      height: 42px;
+      resize: none;
+    }
+
+    .choices label {
+      display: inline-block;
+      width: 48%;
+      margin-bottom: 2px;
+    }
+
+    .choices input {
+      width: auto;
+    }
+
+    .date-shell {
+      position: relative;
+      width: 92%;
+    }
+
+    .date-shell input {
+      width: 100%;
+      padding-right: 28px;
+    }
+
+    /* 悪いUI/UX: カレンダーの見た目だけを置き、押しても日付選択は開きません。 */
+    .fake-calendar {
+      position: absolute;
+      right: 4px;
+      top: 4px;
+      width: 20px;
+      height: 19px;
+      border: 1px solid #777;
+      background: #ffffff;
+      color: #333;
+      font-size: 12px;
+      line-height: 19px;
+      text-align: center;
+      user-select: none;
+    }
+
+    /* 悪いUI/UX: クリックできる要素とただの文字を似た見た目にしています。 */
+    .fake-link,
+    .fake-text,
+    .real-button-looking-link,
+    button.plain {
+      display: inline-block;
+      color: #333;
+      text-decoration: none;
+      background: transparent;
+      border: 0;
+      padding: 2px 3px;
+      font-family: inherit;
+    }
+
+    /* 悪いUI/UX: ボタンなのにボタンらしくなく、ホバーしても変化が小さいです。 */
+    button.plain:hover,
+    .real-button-looking-link:hover,
+    .fake-link:hover {
+      color: #444;
+      background: #fafafa;
+    }
+
+    .danger {
+      background: #ff2b2b;
+      color: #fff;
+      border: 4px solid #b40000;
+      font-size: 19px;
+      font-weight: bold;
+      padding: 7px 14px;
+    }
+
+    .dull-button {
+      background: #ddd;
+      border: 1px solid #aaa;
+      color: #777;
+      padding: 2px 5px;
+    }
+
+    /* 悪いUI/UX: 操作用ボタンを画面のバラバラな位置に置いています。 */
+    .action-top-left {
+      position: absolute;
+      top: 16px;
+      left: 14px;
+    }
+
+    .action-mid-right {
+      position: absolute;
+      top: 290px;
+      right: 18px;
+    }
+
+    .action-bottom-random {
+      position: absolute;
+      bottom: 52px;
+      left: 37%;
+    }
+
+    .action-reset {
+      position: absolute;
+      bottom: 48px;
+      left: 49%;
+    }
+
+    .action-confirm {
+      position: absolute;
+      top: 116px;
+      right: 24%;
+    }
+
+    .message {
+      margin-top: 8px;
+      padding: 7px;
+      min-height: 20px;
+      border: 1px solid #555;
+      background: #ffffff;
+      color: #111;
+      font-family: Arial, sans-serif;
+    }
+
+    .message.error {
+      background: #ffe4e4;
+      border-color: #b40000;
+      color: #8a0000;
+      font-weight: bold;
+    }
+
+    .odd-instructions {
+      margin-top: 6px;
+      font-size: 12px;
+      color: #414141;
+      background: #ffffff;
+      padding: 5px;
+      border: 1px dotted #c5a0a0;
+    }
+
+    .problems {
+      margin-top: 20px;
+      background: #ffffff;
+      border: 3px solid #333;
+      padding: 14px;
+      font-family: Arial, "Yu Gothic", sans-serif;
+      line-height: 1.55;
+    }
+
+    .problems h2 {
+      font-size: 22px;
+      margin-top: 0;
+      color: #111;
+    }
+
+    .problems dt {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .problems dd {
+      margin: 2px 0 8px 0;
+    }
+
+    @media (max-width: 760px) {
+      .crowded {
+        columns: 1;
+      }
+
+      .field-cluster {
+        width: 96%;
+      }
+
+      .form-area {
+        min-height: 870px;
+      }
+
+      .action-top-left,
+      .action-mid-right,
+      .action-bottom-random,
+      .action-reset,
+      .action-confirm {
+        position: static;
+        margin: 5px 3px;
+      }
+
+      .portal-head,
+      .learning-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .lesson-strip {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="warning">
+    これは悪いUI/UXの教材です。実際に個人情報は送信しません。
+  </div>
+
+  <main class="page">
+    <div class="portal-head">
+      <div class="portal-logo">
+        まなび連絡ナビ
+        <small>学校用 学習・申請・確認ポータル</small>
+      </div>
+      <div class="portal-status">
+        現在の状態: 学習中 / 申請中 / 確認待ち / 未提出の可能性があります。右上または下部の操作を確認してください。
+      </div>
+      <div class="portal-help">
+        ヘルプ・連絡・設定<br>
+        <button type="button" class="plain" onclick="buttonDialog()">表示</button>
+        <button type="button" class="plain" onclick="buttonDialog()">確認</button>
+      </div>
+    </div>
+
+    <div class="portal-tabs" aria-label="学習ポータル風のタブ">
+      <button type="button" onclick="buttonDialog()">ホーム</button>
+      <button type="button" onclick="buttonDialog()">今日の学習</button>
+      <button type="button" onclick="buttonDialog()">学校連絡</button>
+      <button type="button" onclick="buttonDialog()">イベント申請</button>
+      <button type="button" onclick="buttonDialog()">提出物</button>
+      <button type="button" onclick="buttonDialog()">結果</button>
+      <button type="button" onclick="buttonDialog()">設定</button>
+      <button type="button" onclick="buttonDialog()">戻る</button>
+    </div>
+
+    <h1>令和年度 学校イベント参加申請フォーム 兼 事前確認および各種連絡入力画面</h1>
+
+    <!-- 悪いUI/UX: 画面上部から長い説明文を詰め込み、重要度の差がわからないようにしています。 -->
+    <section class="crowded" aria-label="長すぎる説明">
+      <span class="important">重要:</span> このフォームは、学校イベントへの参加を希望する生徒が申請内容を入力するためのものです。ただし、入力の順番や必要な項目が画面上で整理されておらず、どこから始めればよいか判断しにくい状態にしてあります。参加対象のイベントは、文化祭準備説明会、放課後IT体験会、地域交流発表、校内ミニ展示、その他学校が必要と認める活動です。申請内容に不足や誤りがある場合、担当者から連絡することがありますが、連絡の有無や時期はこの画面だけでははっきりしません。<span class="extra-note">補足:</span> 集合時間、持ち物、服装、保護者確認、写真撮影の可否、昼食の有無、当日の天候、部活動との重複、教室変更、交通事情などの条件は、別紙、掲示、先生からの口頭説明、またはこの画面内のどこかを確認してください。<span class="tiny-note">注意:</span> この教材では個人情報を本当に集めません。
+    </section>
+
+    <p class="odd-instructions">
+      入力は左から進めても、右側から進めても、下の欄を先に確認しても構いません。入力が終わったら「OK」「実行」「進む」「確認」「送信」のいずれかを押すと、何らかの反応が表示されます。
+      <span class="fake-text">ここはただの文字です</span>
+      <button type="button" class="plain" onclick="buttonDialog()">ここは押せます</button>
+      <a href="#problems" class="real-button-looking-link">解説へ移動する文字リンク</a>
+    </p>
+
+    <div class="lesson-strip" aria-label="進み具合のように見える表示">
+      <span>1 読む</span>
+      <span>2 入力</span>
+      <span>3 確認?</span>
+      <span>4 申請?</span>
+      <span>5 完了?</span>
+    </div>
+
+    <div class="learning-layout">
+      <aside class="side-menu" aria-label="左メニュー">
+        <h2>メニュー</h2>
+        <!-- 悪いUI/UX: フォーム入力中なのに関係の薄いメニューを同じ強さで並べています。 -->
+        <button type="button" onclick="buttonDialog()">単元一覧</button>
+        <button type="button" onclick="buttonDialog()">先生からの課題</button>
+        <button type="button" onclick="buttonDialog()">イベント申請</button>
+        <button type="button" onclick="buttonDialog()">未読のお知らせ</button>
+        <button type="button" onclick="buttonDialog()">学習履歴</button>
+        <button type="button" onclick="buttonDialog()">保護者確認</button>
+        <button type="button" onclick="buttonDialog()">ログアウト</button>
+      </aside>
+
+      <div>
+        <form id="eventForm" class="form-area">
+      <button type="button" class="plain action-top-left" onclick="buttonDialog()">進む</button>
+      <button type="button" class="dull-button action-confirm" onclick="buttonDialog()">確認</button>
+
+      <section class="field-cluster">
+        <h2>参加者情報</h2>
+        <label for="studentName">名前</label>
+        <!-- 悪いUI/UX: 記入例を出さないのに、姓と名の間に空白がないとエラーにしています。 -->
+        <input id="studentName" name="studentName" type="text">
+
+        <label for="className">クラス</label>
+        <input id="className" name="className" type="text">
+
+        <label for="studentNumber">番号</label>
+        <input id="studentNumber" name="studentNumber" type="number">
+
+        <label for="phone">緊急時の連絡先</label>
+        <input id="phone" name="phone" type="text">
+      </section>
+
+      <section class="field-cluster">
+        <h2>イベント選択など</h2>
+        <label for="event">参加したいもの</label>
+        <select id="event" name="event">
+          <option>選んでください</option>
+          <option>放課後IT体験会</option>
+          <option>文化祭準備説明会</option>
+          <option>地域交流発表</option>
+          <option>校内ミニ展示</option>
+        </select>
+
+        <label for="date">日付</label>
+        <div class="date-shell">
+          <input id="date" name="date" type="text">
+          <span class="fake-calendar" aria-hidden="true">📅</span>
+        </div>
+
+        <label for="time">時間</label>
+        <select id="time" name="time">
+          <option>いつでも</option>
+          <option>朝</option>
+          <option>昼</option>
+          <option>放課後</option>
+          <option>先生が決める</option>
+        </select>
+
+        <label for="food">昼食</label>
+        <select id="food" name="food">
+          <option>必要</option>
+          <option>不要</option>
+          <option>不明</option>
+        </select>
+      </section>
+
+      <section class="field-cluster">
+        <h2>確認事項</h2>
+        <div class="choices">
+          <label><input type="checkbox" name="check1"> 見た</label>
+          <label><input type="checkbox" name="check2"> 内容を確認した</label>
+          <label><input type="checkbox" name="check3"> 了承</label>
+          <label><input type="checkbox" name="check4"> まだ</label>
+          <label><input type="checkbox" name="check5"> 先生に聞く</label>
+          <label><input type="checkbox" name="check6"> 不明</label>
+        </div>
+
+        <label for="note">備考と連絡事項と質問とその他全部</label>
+        <textarea id="note" name="note"></textarea>
+      </section>
+
+      <section class="field-cluster">
+        <h2>保護者・持ち物・その他</h2>
+        <label for="guardian">保護者確認</label>
+        <select id="guardian" name="guardian">
+          <option>済</option>
+          <option>未</option>
+          <option>あとで</option>
+        </select>
+
+        <label for="items">持ち物</label>
+        <input id="items" name="items" type="text">
+
+        <label for="photo">写真掲載</label>
+        <select id="photo" name="photo">
+          <option>よい</option>
+          <option>だめ</option>
+          <option>わからない</option>
+        </select>
+      </section>
+
+      <section class="field-cluster">
+        <h2>よくわからない追加欄</h2>
+        <label for="extra1">追加1</label>
+        <input id="extra1" name="extra1" type="text">
+        <label for="extra2">追加2</label>
+        <input id="extra2" name="extra2" type="text">
+        <label for="extra3">追加3</label>
+        <input id="extra3" name="extra3" type="text">
+      </section>
+
+      <button type="button" class="plain action-mid-right" onclick="buttonDialog()">OK</button>
+
+      <!-- 悪いUI/UX: 送信とリセットを近くに置き、リセットのほうを目立たせています。 -->
+      <button type="button" class="dull-button action-bottom-random" onclick="fakeSubmit()">送信</button>
+      <button type="reset" class="danger action-reset" onclick="resetMessage()">リセット</button>
+        </form>
+
+        <div id="message" class="message" aria-live="polite">
+          操作結果はここに表示されます。
+        </div>
+      </div>
+
+      <aside class="notice-box" aria-label="右側のお知らせ">
+        <h2>お知らせ・注意</h2>
+        <!-- 悪いUI/UX: 重要なお知らせ、補足、関係の薄い情報を同じ密度で表示しています。 -->
+        <ul>
+          <li>本日中に確認する項目があります。</li>
+          <li>イベント申請は、先生の確認後に状態が変わる場合があります。</li>
+          <li>未読のお知らせが3件あります。</li>
+          <li>前回の学習結果を確認してください。</li>
+          <li>入力後は下部、右上、または中央付近の操作を確認してください。</li>
+        </ul>
+        <button type="button" onclick="buttonDialog()">確認する</button>
+        <button type="button" onclick="buttonDialog()">あとで</button>
+        <button type="button" onclick="buttonDialog()">進める</button>
+      </aside>
+    </div>
+
+    <section id="problems" class="problems">
+      <h2>この画面の問題点</h2>
+      <dl>
+        <dt>ボタンかどうかわかりにくい</dt>
+        <dd>クリックできる文字、ただの文字、リンク、ボタンの見た目が似ていて、背景も白寄りのため、カーソルや押せる場所を見失いやすくしています。</dd>
+
+        <dt>情報が多すぎる</dt>
+        <dd>説明文、注意書き、入力欄、学習メニュー、お知らせが同じ画面に詰め込まれ、重要な情報と補足情報の区別がつきにくくなっています。</dd>
+
+        <dt>操作の導線がわかりにくい</dt>
+        <dd>入力の順番が見えにくく、「進む」「確認」「OK」「送信」や上部タブ、左右のメニューが画面のバラバラな場所にあります。</dd>
+
+        <dt>誤操作を招きやすい</dt>
+        <dd>送信とリセットが近く、リセットだけ目立つため、間違って入力内容を消してしまう危険があります。</dd>
+      </dl>
+    </section>
+  </main>
+
+  <script>
+    // 教材用の安全な処理です。外部通信や本物の送信は行いません。
+    const message = document.getElementById("message");
+    const studentName = document.getElementById("studentName");
+
+    // 悪いUI/UX: 「OK」「進む」などの曖昧な操作名で、結果もはっきりしません。
+    function showHint() {
+      message.classList.remove("error");
+      message.textContent = "何かの操作をしました。次に何をすればよいかは、画面内のどこかを確認してください。";
+    }
+
+    // 悪いUI/UX: 押した後に初めて「これはボタン」と知らせるため、事前に操作可能だと判断しにくいです。
+    function buttonDialog() {
+      alert("これはボタンです");
+      showHint();
+    }
+
+    // 悪いUI/UXの教材なので、送信しても画面内にダミーメッセージを出すだけにしています。
+    function fakeSubmit() {
+      // 悪いUI/UX: 事前説明や記入例がないのに、名前に空白がない場合だけエラーにしています。
+      if (!/\s/.test(studentName.value.trim())) {
+        message.classList.add("error");
+        message.textContent = "エラー: 名前の入力形式が正しくありません。どこを直すべきかは画面内の説明を確認してください。";
+        return;
+      }
+      message.classList.remove("error");
+      message.textContent = "ダミー送信: 入力内容は外部に送信されていません。授業用の表示だけです。";
+    }
+
+    // 悪いUI/UX: リセット時に確認を出さず、入力内容が消えます。
+    // ただし教材として安全にするため、ブラウザを閉じにくくする処理などは入れていません。
+    function resetMessage() {
+      message.classList.remove("error");
+      message.textContent = "入力内容を確認なしで消しました。これは誤操作を招く悪い例です。";
+    }
+  </script>
+</body>
+</html>
