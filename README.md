@@ -1,4 +1,4 @@
-# Bat_UI_test
+# Bad_UI_test
 オープンキャンパスで高校生に悪いUIを説明するために作ったウェブサイトです
 
 GitHub Pages:
